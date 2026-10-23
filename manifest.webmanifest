@@ -1,13 +1,14 @@
 {
-  "name": "Rupee Ledger",
-  "short_name": "Ledger",
+  "name": "SpendWise",
+  "short_name": "SpendWise",
   "description": "Personal finance tracker that keeps spending, loan movements and card payments apart. Data stays on your device.",
   "start_url": "./",
   "scope": "./",
+  "id": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0b0d10",
-  "theme_color": "#0b0d10",
+  "background_color": "#070b10",
+  "theme_color": "#070b10",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },

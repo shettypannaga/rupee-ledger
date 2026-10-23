@@ -1,4 +1,4 @@
-# Rupee Ledger
+# SpendWise
 
 A personal finance tracker that runs entirely in the browser. Add it to your iPhone Home Screen from Safari.
 
