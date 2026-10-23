@@ -1,6 +1,6 @@
 // Offline support: the app shell is cached on first visit. Pages are fetched network-first so
 // updates arrive when online, and the cached copy opens when offline. No user data passes through here.
-const CACHE = 'spendwise-74fdfe8f6b';
+const CACHE = 'spendwise-19789ce996';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-light-192.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', (e) => {

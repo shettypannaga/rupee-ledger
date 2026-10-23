@@ -2317,7 +2317,8 @@ VIEWS.home = function () {
 
   h += section('', group(
     row('Money flow', '', { sub: 'Spending, income, loan and card movements kept apart', icon: ICON.flow, ic: 'neutral', act: 'go', data: { page: 'moneyflow' } }) +
-    row('Insights', '', { sub: 'Trends, categories, plan vs actual', icon: ICON.chart, ic: 'neutral', act: 'go', data: { page: 'insights' } }), true));
+    row('Insights', '', { sub: 'Trends, categories, plan vs actual', icon: ICON.chart, ic: 'neutral', act: 'go', data: { page: 'insights' } }) +
+    row('Back up & restore', '', { sub: last ? 'Last backup ' + fmtDate(last.slice(0, 10)) : 'No backup yet', icon: ICON.shield, ic: last ? 'neutral' : 'warn', act: 'openBackup' }), true));
   return h;
 };
 
@@ -3767,7 +3768,15 @@ ACTIONS.openSettings = () => openSettings();
 function openSettings() {
   const s = S.settings, b = s.budget;
   const inScope = C.categoriesInScope(S).filter((c) => !c.system).map((c) => c.name);
-  let h = '<form data-form="settings">';
+  const last = s.lastBackupAt;
+  // Backup first: it is the one thing people must be able to find.
+  let h = '<div class="eyebrow">Your data</div>' + group(
+    row('<b>Back up &amp; restore</b>', '', { sub: last ? 'Last backup ' + fmtDate(last.slice(0, 10), true) : 'No backup yet. Do one now.', icon: ICON.shield, ic: last ? 'good' : 'warn', act: 'openBackup' }) +
+    row('Where is my data stored?', '', { icon: ICON.info, ic: 'neutral', act: 'openStorageInfo' }) +
+    row(demo ? 'Exit demo mode' : 'Try with demo data', '', { icon: ICON.chart, ic: 'neutral', act: demo ? 'exitDemo' : 'enterDemo', sub: demo ? '' : 'Your real data stays untouched' }), true);
+  h += '<div class="eyebrow">Manage</div><div class="group">' +
+    row('Categories & planned amounts', '', { act: 'openCategories' }) + row('Accounts', '', { act: 'openAccounts' }) + row('Setup questions', s.setupDone ? badge('Done', 'good') : badge('Not finished', 'warn'), { act: 'openSetup' }) + '</div>';
+  h += '<div class="eyebrow">Preferences</div><form data-form="settings">';
   h += '<div class="field"><span>Appearance</span>' + chipRadio('theme', [['dark', 'Dark'], ['light', 'Light'], ['system', 'Match device']], s.theme || 'dark') + '</div>';
   h += '<div class="eyebrow">Monthly budget</div>' + field('Budget amount', moneyInput('budget', b.amount), b.status === 'proposed' ? 'Proposed figure. Saving makes it your own.' : '') +
     '<div class="field" data-change="scopeToggle"><span>What counts toward it</span>' + chipRadio('scope', Object.entries(C.BUDGET_SCOPES), b.scope) + '</div>' +
@@ -3778,10 +3787,6 @@ function openSettings() {
   h += '<div class="eyebrow">Targets</div><div class="field-row">' + field('Emergency cash', moneyInput('emergency', s.emergencyCashTarget || ''), 'Optional') + field(esc(S.settings.gamingName || 'Gaming') + ' target / month', moneyInput('fcTarget', s.fcMonthlyTarget || 0)) + '</div>' +
     field('Tracking started', '<input type="date" name="trackingStart" value="' + esc(s.trackingStart) + '">', 'Spending pace only counts days from here, so a partial first month is judged fairly.');
   h += errorsBox() + '<button class="btn primary" type="submit">Save settings</button></form>';
-  h += '<div class="eyebrow">Manage</div><div class="group">' +
-    row('Categories & planned amounts', '', { act: 'openCategories' }) + row('Accounts', '', { act: 'openAccounts' }) + row('Setup questions', s.setupDone ? badge('Done', 'good') : badge('Not finished', 'warn'), { act: 'openSetup' }) + '</div>';
-  h += '<div class="eyebrow">Your data</div><div class="group">' + row('Backup, export & restore', '', { act: 'openBackup' }) + row('Where is my data stored?', '', { act: 'openStorageInfo' }) +
-    row(demo ? 'Exit demo mode' : 'Try with demo data', '', { act: demo ? 'exitDemo' : 'enterDemo', sub: demo ? '' : 'Your real data stays untouched in its own slot' }) + '</div>';
   h += '<button class="btn danger block" data-act="eraseAll">Erase all data in this browser</button>';
   h += '<p class="small faint" style="text-align:center">SpendWise · data format v' + C.SCHEMA_VERSION + ' · works offline, no account, no bank connection</p>';
   openSheet('Settings', h);
